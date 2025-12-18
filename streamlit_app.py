@@ -19,7 +19,7 @@ database=st.secrets["snowflake"]["database"],
 schema=st.secrets["snowflake"]["schema"],
 )
 # Query your view
-df = """
+query = """
     SELECT COLOR_OR_STYLE, PRICE, FILE_URL, SIZE_LIST, UPSELL_PRODUCT_DESC
     FROM zenas_athleisure_db.products.catalog_for_website
 """
