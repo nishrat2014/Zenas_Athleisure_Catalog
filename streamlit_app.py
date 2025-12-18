@@ -1,19 +1,32 @@
 # Import python packages
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
+import snowflake.connector
+import pandas as pd
 
-# Write directly to the app
-st.title("Zena's Amazing Athleisure Catalog 🎈")
-st.write("Pick a sweatsuit color or size:")
 
-# Get the current credentials
-session = get_active_session()
+#snowflake connection
+conn = snowflake.connector.connect(
+  user=st.secrets["snowflake"]["user"],
 
-# Use Snowpark to query and convert to Pandas
-df = session.sql("""
+password=st.secrets["snowflake"]["password"],
+
+account=st.secrets["snowflake"]["account"],
+
+warehouse=st.secrets["snowflake"]["warehouse"],
+
+database=st.secrets["snowflake"]["database"],
+
+schema=st.secrets["snowflake"]["schema"],
+)
+# Query your view
+df = """
     SELECT COLOR_OR_STYLE, PRICE, FILE_URL, SIZE_LIST, UPSELL_PRODUCT_DESC
     FROM zenas_athleisure_db.products.catalog_for_website
-""").to_pandas()
+"""
+df = pd.read_sql(query, conn)
+
+
+
 
 # --- Dropdown menu for color selection ---
 selected_color = st.selectbox("", df["COLOR_OR_STYLE"].unique())
